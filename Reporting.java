@@ -1,5 +1,7 @@
 package com.qa.utility;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,9 +30,9 @@ public class Reporting extends TestListenerAdapter{
 		  htmlReporter.config().setDocumentTitle("Automation Report");
 		  htmlReporter.config().setReportName("Functional Test Report");
 		  htmlReporter.config().setTheme(Theme.DARK);
+		  htmlReporter.config().setAutoCreateRelativePathMedia(true);
 		  xReports =new ExtentReports();
 		  xReports.attachReporter(htmlReporter);
-		  
 		  
 	  }
 
@@ -50,6 +52,17 @@ public class Reporting extends TestListenerAdapter{
 		   xTest=xReports.createTest(tr.getName());
 		   xTest.log(Status.FAIL, "Test is Failed");
 		   xTest.log(Status.FAIL, MarkupHelper.createLabel(tr.getName(), ExtentColor.RED));
+		   xTest.log(Status.FAIL,tr.getThrowable());
+		   String SSpath= System.getProperty("user.dir")+"/Screensots/"+tr.getName()+".png";
+		   File file=new File(SSpath);
+		   if(file.exists()) {
+			   try {
+				xTest.fail("Screenshot for failed test is:"+xTest.addScreenCaptureFromPath(SSpath));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		   }
+		   
 	  }
 
 	  

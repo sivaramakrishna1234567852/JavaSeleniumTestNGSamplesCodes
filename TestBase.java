@@ -1,56 +1,45 @@
-package com.qa.testscripts;
+package com.resolver.challenge;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
 
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class TestBase {
-	WebDriver driver = null;
-	//String Browser = "Chrome";
-	@Parameters({"Browser","url"})
-	@BeforeClass
-	public void setUp(String Browser,String url) {
 	
+	// Create chrome driver object
+	 WebDriver driver= new ChromeDriver();
+	
+	// Write a method that allows you to find the value of any cell on the grid
+	String getCellValue(int rowNum, int colNum) {
+		String rownum= Integer.toString(rowNum+1);
+		String colnum= Integer.toString(colNum+1);
+		WebElement locator= driver.findElement(By.xpath("//table/tbody/tr["+rownum+"]/td["+colnum+"]"));
+		return locator.getText();
+	}
+	
+	@BeforeClass
+	public void openbrowserUrl() {
 		
-		if(Browser.equalsIgnoreCase("Chrome"))
-		{
-			System.setProperty("webdriver.chrome.driver", "C:\\Users\\Siva\\Downloads\\percy pics\\chromedriver_win32\\chromedriver.exe");
-			//WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver(); // invoke the browser
-		}
-		else if(Browser.equalsIgnoreCase("IE"))
-		{
-			System.setProperty("webdriver.ie.driver", "C:\\Users\\Siva\\Downloads\\percy pics\\IEDriverServer_x64_4.0.0\\IEDriverServer.exe");
-			//WebDriverManager.iedriver().setup();
-			driver=new InternetExplorerDriver(); // invoke the IE
-		}
-		else if (Browser.equalsIgnoreCase("Edge"))
-		{
-			System.setProperty("webdriver.edge.driver", "C:\\Users\\Siva\\Downloads\\percy pics\\edgedriver_win64\\msedgedriver.exe");
-			//WebDriverManager.edgedriver().setup();
-			driver=new EdgeDriver();
-
-		}
-		else if(Browser.equalsIgnoreCase("Firefox"))
-		{
-		   System.setProperty("webdriver.firefox.driver","C:\\Users\\Siva\\Downloads\\percy pics\\geckodriver-v0.30.0-win64\\geckodriver.exe");
-			//WebDriverManager.firefoxdriver().setup();
-		driver=new FirefoxDriver();
-		}
-	driver.get(url);
-	driver.manage().window().maximize();
+		       // Open chrome browser
+				WebDriverManager.chromedriver().setup();	
+				
+				// Maximize the window opened
+				driver.manage().window().maximize();
+				
+				// Navigate to webpage url that is given
+				driver.get("file:///C:/Users/Siva/Downloads/AutomationChallenge_2022/QE-index.html");
+		
 	}
 	
 	@AfterClass
 	public void tearDown() {
 		driver.close();
 	}
+
 }
